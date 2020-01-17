@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
 cimport cython
+cimport numpy as np
 
 
 # We now need to fix a datatype for our arrays. I've used the variable
@@ -40,15 +41,9 @@ cimport cython
 # type info object.
 DTYPE = np.float64
 
-ctypedef fused number:
-    cython.short
-    cython.int
-    cython.long
-    cython.float
-    cython.double
 
-cdef double overlap(number edge_in_l, number edge_in_u,
-                    number edge_out_l, number edge_out_u):
+cdef double overlap(double edge_in_l, double edge_in_u,
+                    double edge_out_l, double edge_out_u):
     """ Calculate overlap between energy intervals
 
        1
@@ -77,7 +72,7 @@ cdef double overlap(number edge_in_l, number edge_in_u,
 @cython.boundscheck(False)  # Deactivate bounds checking
 @cython.wraparound(False)   # Deactivate negative indexing.
 @cython.cdivision(True)
-def rebin_1D(number[:] counts, number[:] mids_in, number[:] mids_out):
+def rebin_1D(np.ndarray counts, np.ndarray mids_in, np.ndarray mids_out):
     """Rebin an array of counts from binning mids_in to binning mids_out
 
     Args:
@@ -131,8 +126,8 @@ def rebin_1D(number[:] counts, number[:] mids_in, number[:] mids_out):
 @cython.boundscheck(False)  # Deactivate bounds checking
 @cython.wraparound(False)   # Deactivate negative indexing.
 @cython.cdivision(True)
-def rebin_2D(number[:, :] counts, number[:] mids_in,
-             number[:] mids_out, int axis=0):
+def rebin_2D(np.ndarray counts, np.ndarray mids_in,
+             np.ndarray mids_out, int axis=0):
     """Rebin a matrix of counts from binning mids_in to binning mids_out
 
     This is a currently just a wrapper for rebin() to handle the logistics
